@@ -110,9 +110,6 @@ var Swipeout = React.createClass({
     if (nextProps.close) this._close()
   }
 , _handlePanResponderGrant: function(e: Object, gestureState: Object) {
-    if(this.props.onOpen){
-      this.props.onOpen(this.props.sectionID, this.props.rowID)
-    }
     this.refs.swipeoutContent.measure((ox, oy, width, height) => {
       this.setState({
         btnWidth: (width/5),
@@ -171,10 +168,12 @@ var Swipeout = React.createClass({
     if (this.state.swiping) {
       if (openRight && contentPos < 0 && posX < 0) {
         // open swipeout right
+        this._onOpen()
         this._tweenContent('contentPos', -btnsRightWidth)
         this.setState({ contentPos: -btnsRightWidth, openedLeft: false, openedRight: true })
       } else if (openLeft && contentPos > 0 && posX > 0) {
         // open swipeout left
+        this._onOpen()
         this._tweenContent('contentPos', btnsLeftWidth)
         this.setState({ contentPos: btnsLeftWidth, openedLeft: true, openedRight: false })
       }
@@ -214,6 +213,11 @@ var Swipeout = React.createClass({
       openedLeft: false,
     })
   }
+, _onOpen: function () {
+  if (this.props.onOpen) {
+    this.props.onOpen(this.props.sectionID, this.props.rowID)
+  }
+}
 , render: function() {
     var contentWidth = this.state.contentWidth
     var posX = this.getTweeningValue('contentPos')
